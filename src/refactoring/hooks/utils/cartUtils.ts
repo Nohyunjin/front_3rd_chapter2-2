@@ -11,8 +11,13 @@ export const calculateItemTotal = (item: CartItem) => {
       : maxDiscount;
   }, 0);
 
-  const totalAfterDiscount = totalBeforeDiscount * (1 - discount);
-  return totalAfterDiscount;
+  const totalAfterDiscount = price * quantity * (1 - discount);
+
+  return {
+    totalBeforeDiscount: totalBeforeDiscount,
+    totalAfterDiscount: totalAfterDiscount,
+    totalDiscount: totalBeforeDiscount - totalAfterDiscount,
+  };
 };
 
 export const getMaxApplicableDiscount = (item: CartItem) => {
@@ -34,13 +39,17 @@ export const calculateCartTotal = (
   cart: CartItem[],
   selectedCoupon: Coupon | null
 ) => {
-  let totalBeforeDiscount = 0;
-  let totalAfterDiscount = 0;
+  const itemDiscountStatus = cart.map(calculateItemTotal);
 
-  cart.forEach((item) => {
-    totalBeforeDiscount += item.product.price * item.quantity;
-    totalAfterDiscount += calculateItemTotal(item);
-  });
+  const totalBeforeDiscount = itemDiscountStatus.reduce(
+    (total, item) => total + item.totalBeforeDiscount,
+    0
+  );
+
+  let totalAfterDiscount = itemDiscountStatus.reduce(
+    (total, item) => total + item.totalAfterDiscount,
+    0
+  );
 
   // 쿠폰 적용
   if (selectedCoupon) {
