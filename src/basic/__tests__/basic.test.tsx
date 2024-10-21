@@ -355,12 +355,12 @@ describe('basic > ', () => {
     describe('calculateItemTotal', () => {
       test('할인 없이 총액을 계산해야 합니다.', () => {
         const item: CartItem = { product: testProduct, quantity: 1 };
-        expect(cartUtils.calculateItemTotal(item)).toBe(100);
+        expect(cartUtils.calculateItemTotal(item).totalAfterDiscount).toBe(100);
       });
 
       test('수량에 따라 올바른 할인을 적용해야 합니다.', () => {
         const item: CartItem = { product: testProduct, quantity: 5 };
-        expect(cartUtils.calculateItemTotal(item)).toBe(400); // 500 * 0.8
+        expect(cartUtils.calculateItemTotal(item).totalAfterDiscount).toBe(400); // 500 * 0.8
       });
     });
 
