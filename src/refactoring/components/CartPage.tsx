@@ -41,6 +41,7 @@ export const CartPage = ({ products, coupons }: Props) => {
     return appliedDiscount;
   };
 
+  // html 코드 내에 함수 있으면 컴포넌트로
   return (
     <div className='container mx-auto p-4'>
       <h1 className='text-3xl font-bold mb-6'>장바구니</h1>
