@@ -81,11 +81,9 @@ export const AdminPage = ({
   };
 
   const handleStockUpdate = (productId: string, newStock: number) => {
-    const updatedProduct = products.find((p) => p.id === productId);
-    if (updatedProduct) {
-      const newProduct = { ...updatedProduct, stock: newStock };
-      onProductUpdate(newProduct);
-      setEditingProduct(newProduct);
+    if (editingProduct && editingProduct.id === productId) {
+      const updatedProduct = { ...editingProduct, stock: newStock };
+      setEditingProduct(updatedProduct);
     }
   };
 
