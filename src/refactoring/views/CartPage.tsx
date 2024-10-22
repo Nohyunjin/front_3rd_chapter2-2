@@ -7,6 +7,11 @@ import {
 } from '../../types.ts';
 import { Button } from '../components/common/Button.tsx';
 import { useCart } from '../hooks/index.ts';
+import {
+  getAppliedDiscount,
+  getMaxDiscount,
+  getRemainingStock,
+} from '../utils/cart/cartUtils.ts';
 import { displayQuantityDiscount } from '../utils/textFormat.ts';
 
 interface Props {
@@ -25,28 +30,19 @@ export const CartPage = ({ products, coupons }: Props) => {
     selectedCoupon,
   } = useCart();
 
-  const getMaxDiscount = (discounts: { quantity: number; rate: number }[]) => {
-    return discounts.reduce((max, discount) => Math.max(max, discount.rate), 0);
-  };
-
-  const getRemainingStock = (product: Product) => {
-    const cartItem = cart.find((item) => item.product.id === product.id);
-    return product.stock - (cartItem?.quantity || 0);
-  };
-
   const { totalBeforeDiscount, totalAfterDiscount, totalDiscount } =
     calculateTotal();
 
-  const getAppliedDiscount = (item: CartItem) => {
-    const { discounts } = item.product;
-    const { quantity } = item;
-    let appliedDiscount = 0;
-    for (const discount of discounts) {
-      if (quantity >= discount.quantity) {
-        appliedDiscount = Math.max(appliedDiscount, discount.rate);
-      }
-    }
-    return appliedDiscount;
+  const handleAddToCart = (product: Product) => {
+    addToCart(product);
+  };
+
+  const handleUpdateQuantity = (cartItem: CartItem, quantity: number) => {
+    updateQuantity(cartItem.product.id, quantity);
+  };
+
+  const handleRemoveFromCart = (cartItem: CartItem) => {
+    removeFromCart(cartItem.product.id);
   };
 
   // html 코드 내에 함수 있으면 컴포넌트로
@@ -58,7 +54,7 @@ export const CartPage = ({ products, coupons }: Props) => {
           <h2 className='text-2xl font-semibold mb-4'>상품 목록</h2>
           <div className='space-y-2'>
             {products.map((product) => {
-              const remainingStock = getRemainingStock(product);
+              const remainingStock = getRemainingStock(product, cart);
               return (
                 <div
                   key={product.id}
@@ -103,7 +99,7 @@ export const CartPage = ({ products, coupons }: Props) => {
                         ? 'bg-blue-500 text-white hover:bg-blue-600'
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     }`}
-                    onClick={() => addToCart(product)}
+                    onClick={() => handleAddToCart(product)}
                     disabled={remainingStock <= 0}
                   />
                 </div>
@@ -139,20 +135,20 @@ export const CartPage = ({ products, coupons }: Props) => {
                       text='-'
                       className='bg-gray-300 text-gray-800 px-2 py-1 rounded mr-1 hover:bg-gray-400'
                       onClick={() =>
-                        updateQuantity(item.product.id, item.quantity - 1)
+                        handleUpdateQuantity(item, item.quantity - 1)
                       }
                     />
                     <Button
                       text='+'
                       className='bg-gray-300 text-gray-800 px-2 py-1 rounded mr-1 hover:bg-gray-400'
                       onClick={() =>
-                        updateQuantity(item.product.id, item.quantity + 1)
+                        handleUpdateQuantity(item, item.quantity + 1)
                       }
                     />
                     <Button
                       text='삭제'
                       className='bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600'
-                      onClick={() => removeFromCart(item.product.id)}
+                      onClick={() => handleRemoveFromCart(item)}
                     />
                   </div>
                 </div>
