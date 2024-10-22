@@ -35,7 +35,7 @@ export const getMaxApplicableDiscount = (item: CartItemType) => {
   return appliedDiscount;
 };
 
-export const calculateCartTotal = (
+export const calculateCartDiscount = (
   cart: CartItemType[],
   selectedCoupon: Coupon | null
 ) => {
