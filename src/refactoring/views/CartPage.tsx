@@ -1,4 +1,5 @@
 import { CartItem, Coupon, Product } from '../../types.ts';
+import { Button } from '../components/common/Button.tsx';
 import { useCart } from '../hooks/index.ts';
 
 interface Props {
@@ -89,17 +90,16 @@ export const CartPage = ({ products, coupons }: Props) => {
                       ))}
                     </ul>
                   )}
-                  <button
-                    onClick={() => addToCart(product)}
+                  <Button
+                    text={remainingStock > 0 ? '장바구니에 추가' : '품절'}
                     className={`w-full px-3 py-1 rounded ${
                       remainingStock > 0
                         ? 'bg-blue-500 text-white hover:bg-blue-600'
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                     }`}
+                    onClick={() => addToCart(product)}
                     disabled={remainingStock <= 0}
-                  >
-                    {remainingStock > 0 ? '장바구니에 추가' : '품절'}
-                  </button>
+                  />
                 </div>
               );
             })}
@@ -129,28 +129,25 @@ export const CartPage = ({ products, coupons }: Props) => {
                     </span>
                   </div>
                   <div>
-                    <button
+                    <Button
+                      text='-'
+                      className='bg-gray-300 text-gray-800 px-2 py-1 rounded mr-1 hover:bg-gray-400'
                       onClick={() =>
                         updateQuantity(item.product.id, item.quantity - 1)
                       }
+                    />
+                    <Button
+                      text='+'
                       className='bg-gray-300 text-gray-800 px-2 py-1 rounded mr-1 hover:bg-gray-400'
-                    >
-                      -
-                    </button>
-                    <button
                       onClick={() =>
                         updateQuantity(item.product.id, item.quantity + 1)
                       }
-                      className='bg-gray-300 text-gray-800 px-2 py-1 rounded mr-1 hover:bg-gray-400'
-                    >
-                      +
-                    </button>
-                    <button
-                      onClick={() => removeFromCart(item.product.id)}
+                    />
+                    <Button
+                      text='삭제'
                       className='bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600'
-                    >
-                      삭제
-                    </button>
+                      onClick={() => removeFromCart(item.product.id)}
+                    />
                   </div>
                 </div>
               );
