@@ -19,26 +19,6 @@ export const AdminPage = ({
   onCouponAdd,
 }: Props) => {
   const [openProductIds, setOpenProductIds] = useState<Set<string>>(new Set());
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [newDiscount, setNewDiscount] = useState<Discount>({
-    quantity: 0,
-    rate: 0,
-  });
-  const [newCoupon, setNewCoupon] = useState<Coupon>({
-    name: '',
-    code: '',
-    discountType: 'percentage',
-    discountValue: 0,
-  });
-  const [showNewProductForm, setShowNewProductForm] = useState(false);
-  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({
-    name: '',
-    price: 0,
-    stock: 0,
-    discounts: [],
-  });
-  const [hasErrorOnProductEdit, setHasErrorOnProductEdit] = useState(false);
-
   const toggleProductAccordion = (productId: string) => {
     setOpenProductIds((prev) => {
       const newSet = new Set(prev);
@@ -51,6 +31,7 @@ export const AdminPage = ({
     });
   };
 
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   // handleEditProduct 함수 수정
   const handleEditProduct = (product: Product) => {
     setEditingProduct({ ...product });
@@ -87,6 +68,22 @@ export const AdminPage = ({
     }
   };
 
+  const handleRemoveDiscount = (productId: string, index: number) => {
+    const updatedProduct = products.find((p) => p.id === productId);
+    if (updatedProduct) {
+      const newProduct = {
+        ...updatedProduct,
+        discounts: updatedProduct.discounts.filter((_, i) => i !== index),
+      };
+      onProductUpdate(newProduct);
+      setEditingProduct(newProduct);
+    }
+  };
+
+  const [newDiscount, setNewDiscount] = useState<Discount>({
+    quantity: 0,
+    rate: 0,
+  });
   const handleAddDiscount = (productId: string) => {
     const updatedProduct = products.find((p) => p.id === productId);
     if (updatedProduct && editingProduct) {
@@ -100,41 +97,8 @@ export const AdminPage = ({
     }
   };
 
-  const handleRemoveDiscount = (productId: string, index: number) => {
-    const updatedProduct = products.find((p) => p.id === productId);
-    if (updatedProduct) {
-      const newProduct = {
-        ...updatedProduct,
-        discounts: updatedProduct.discounts.filter((_, i) => i !== index),
-      };
-      onProductUpdate(newProduct);
-      setEditingProduct(newProduct);
-    }
-  };
-
-  const handleAddCoupon = () => {
-    onCouponAdd(newCoupon);
-    setNewCoupon({
-      name: '',
-      code: '',
-      discountType: 'percentage',
-      discountValue: 0,
-    });
-  };
-
-  const handleAddNewProduct = () => {
-    const productWithId = { ...newProduct, id: Date.now().toString() };
-    onProductAdd(productWithId);
-    setNewProduct({
-      name: '',
-      price: 0,
-      stock: 0,
-      discounts: [],
-    });
-    setShowNewProductForm(false);
-  };
-
-  // edit product 상태일때, product의 상품명, 가격, 재고가 비어있는지 체크하는 함수 추가
+  // edit product 상태일때, product의 상품명, 가격, 재고가 비어있는지 체크
+  const [hasErrorOnProductEdit, setHasErrorOnProductEdit] = useState(false);
   useEffect(() => {
     if (editingProduct) {
       if (
@@ -151,6 +115,41 @@ export const AdminPage = ({
       }
     }
   }, [editingProduct]);
+
+  const [newCoupon, setNewCoupon] = useState<Coupon>({
+    name: '',
+    code: '',
+    discountType: 'percentage',
+    discountValue: 0,
+  });
+  const handleAddCoupon = () => {
+    onCouponAdd(newCoupon);
+    setNewCoupon({
+      name: '',
+      code: '',
+      discountType: 'percentage',
+      discountValue: 0,
+    });
+  };
+
+  const [showNewProductForm, setShowNewProductForm] = useState(false);
+  const [newProduct, setNewProduct] = useState<Omit<Product, 'id'>>({
+    name: '',
+    price: 0,
+    stock: 0,
+    discounts: [],
+  });
+  const handleAddNewProduct = () => {
+    const productWithId = { ...newProduct, id: Date.now().toString() };
+    onProductAdd(productWithId);
+    setNewProduct({
+      name: '',
+      price: 0,
+      stock: 0,
+      discounts: [],
+    });
+    setShowNewProductForm(false);
+  };
 
   // 버튼 컴포넌트 만들기
   // input 컴포넌트 만들기
