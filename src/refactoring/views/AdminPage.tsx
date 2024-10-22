@@ -1,11 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Coupon,
-  Discount,
-  DiscountType,
-  PageType,
-  Product,
-} from '../../types.ts';
+import { Coupon, Discount, PageType, Product } from '../../types.ts';
 import { Button } from '../components/common/Button.tsx';
 import { TextInput } from '../components/common/TextInput.tsx';
 import {
@@ -130,7 +124,7 @@ export const AdminPage = ({
   const [newCoupon, setNewCoupon] = useState<Coupon>({
     name: '',
     code: '',
-    discountType: DiscountType.PERCENTAGE,
+    discountType: 'percentage',
     discountValue: 0,
   });
   const handleAddCoupon = () => {
@@ -138,7 +132,7 @@ export const AdminPage = ({
     setNewCoupon({
       name: '',
       code: '',
-      discountType: DiscountType.PERCENTAGE,
+      discountType: 'percentage',
       discountValue: 0,
     });
   };
@@ -440,7 +434,7 @@ export const AdminPage = ({
                   onChange={(e) =>
                     setNewCoupon({
                       ...newCoupon,
-                      discountType: e.target.value as DiscountType,
+                      discountType: e.target.value as 'amount' | 'percentage',
                     })
                   }
                   className='w-full p-2 border rounded'

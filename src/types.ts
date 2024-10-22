@@ -19,16 +19,11 @@ export interface CartItem {
 export interface Coupon {
   name: string;
   code: string;
-  discountType: DiscountType;
+  discountType: 'amount' | 'percentage';
   discountValue: number;
 }
 
 export enum PageType {
   ADMIN = 'ADMIN',
   USER = 'USER',
-}
-
-export enum DiscountType {
-  AMOUNT = 'AMOUNT',
-  PERCENTAGE = 'PERCENTAGE',
 }

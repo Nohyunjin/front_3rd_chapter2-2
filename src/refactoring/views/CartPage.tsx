@@ -1,10 +1,4 @@
-import {
-  CartItem,
-  Coupon,
-  DiscountType,
-  PageType,
-  Product,
-} from '../../types.ts';
+import { CartItem, Coupon, PageType, Product } from '../../types.ts';
 import { Button } from '../components/common/Button.tsx';
 import { useCart } from '../hooks/index.ts';
 import { displayQuantityDiscount } from '../utils/textFormat.ts';
@@ -170,7 +164,7 @@ export const CartPage = ({ products, coupons }: Props) => {
               {coupons.map((coupon, index) => (
                 <option key={coupon.code} value={index}>
                   {coupon.name} -{' '}
-                  {coupon.discountType === DiscountType.AMOUNT
+                  {coupon.discountType === 'amount'
                     ? `${coupon.discountValue}원`
                     : `${coupon.discountValue}%`}
                 </option>
@@ -179,7 +173,7 @@ export const CartPage = ({ products, coupons }: Props) => {
             {selectedCoupon && (
               <p className='text-green-600'>
                 적용된 쿠폰: {selectedCoupon.name}(
-                {selectedCoupon.discountType === DiscountType.AMOUNT
+                {selectedCoupon.discountType === 'amount'
                   ? `${selectedCoupon.discountValue}원`
                   : `${selectedCoupon.discountValue}%`}{' '}
                 할인)

@@ -1,7 +1,7 @@
-import { Coupon, Discount, DiscountType, PageType, Product } from '../../types';
+import { Coupon, Discount, PageType, Product } from '../../types';
 
 export const displayCoupons = (coupon: Coupon) => {
-  if (coupon.discountType === DiscountType.AMOUNT) {
+  if (coupon.discountType === 'amount') {
     return `${coupon.name} (${coupon.code}):${coupon.discountValue}원 할인`;
   } else {
     return `${coupon.name} (${coupon.code}):${coupon.discountValue}% 할인`;
