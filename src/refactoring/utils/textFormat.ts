@@ -1,4 +1,4 @@
-import { Coupon, Discount, Product } from '../../types';
+import { Coupon, Discount, PageType, Product } from '../../types';
 
 export const displayCoupons = (coupon: Coupon) => {
   if (coupon.discountType === 'amount') {
@@ -8,8 +8,17 @@ export const displayCoupons = (coupon: Coupon) => {
   }
 };
 
-export const displayQuantityDiscount = (discount: Discount) => {
-  return `${discount.quantity}개 이상 구매 시 ${discount.rate * 100}% 할인`;
+export const displayQuantityDiscount = (
+  discount: Discount,
+  pageType: PageType
+) => {
+  if (pageType === PageType.ADMIN) {
+    return `${discount.quantity}개 이상 구매 시 ${discount.rate * 100}% 할인`;
+  } else if (pageType === PageType.USER) {
+    return `${discount.quantity}개 이상: ${(discount.rate * 100).toFixed(
+      0
+    )}% 할인`;
+  }
 };
 
 export const displayProductStatus = (product: Product) => {

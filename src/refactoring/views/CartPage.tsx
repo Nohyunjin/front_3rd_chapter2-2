@@ -1,6 +1,7 @@
-import { CartItem, Coupon, Product } from '../../types.ts';
+import { CartItem, Coupon, PageType, Product } from '../../types.ts';
 import { Button } from '../components/common/Button.tsx';
 import { useCart } from '../hooks/index.ts';
+import { displayQuantityDiscount } from '../utils/textFormat.ts';
 
 interface Props {
   products: Product[];
@@ -84,8 +85,7 @@ export const CartPage = ({ products, coupons }: Props) => {
                     <ul className='list-disc list-inside text-sm text-gray-500 mb-2'>
                       {product.discounts.map((discount, index) => (
                         <li key={index}>
-                          {discount.quantity}개 이상:{' '}
-                          {(discount.rate * 100).toFixed(0)}% 할인
+                          {displayQuantityDiscount(discount, PageType.USER)}
                         </li>
                       ))}
                     </ul>

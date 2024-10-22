@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Coupon, Discount, Product } from '../../types.ts';
+import { Coupon, Discount, PageType, Product } from '../../types.ts';
 import { Button } from '../components/common/Button.tsx';
 import { TextInput } from '../components/common/TextInput.tsx';
 import {
@@ -323,7 +323,12 @@ export const AdminPage = ({
                               key={index}
                               className='flex justify-between items-center mb-2'
                             >
-                              <span>{displayQuantityDiscount(discount)}</span>
+                              <span>
+                                {displayQuantityDiscount(
+                                  discount,
+                                  PageType.ADMIN
+                                )}
+                              </span>
                               <Button
                                 text='삭제'
                                 className='bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600'
@@ -377,7 +382,10 @@ export const AdminPage = ({
                         {product.discounts.map((discount, index) => (
                           <div key={index} className='mb-2'>
                             <span>
-                              {displayQuantityDiscount(discount)}
+                              {displayQuantityDiscount(
+                                discount,
+                                PageType.ADMIN
+                              )}
                             </span>
                           </div>
                         ))}
