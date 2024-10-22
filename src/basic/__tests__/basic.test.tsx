@@ -12,7 +12,7 @@ import { useCart, useCoupons, useProducts } from '../../refactoring/hooks';
 import * as cartUtils from '../../refactoring/utils/cart/cartUtils';
 import { AdminPage } from '../../refactoring/views/AdminPage';
 import { CartPage } from '../../refactoring/views/CartPage';
-import { CartItem, Coupon, Product } from '../../types';
+import { CartItemType, Coupon, DiscountType, Product } from '../../types';
 
 const mockProducts: Product[] = [
   {
@@ -41,13 +41,13 @@ const mockCoupons: Coupon[] = [
   {
     name: '5000원 할인 쿠폰',
     code: 'AMOUNT5000',
-    discountType: 'amount',
+    discountType: DiscountType.AMOUNT,
     discountValue: 5000,
   },
   {
     name: '10% 할인 쿠폰',
     code: 'PERCENT10',
-    discountType: 'percentage',
+    discountType: DiscountType.PERCENTAGE,
     discountValue: 10,
   },
 ];
@@ -327,7 +327,7 @@ describe('basic > ', () => {
       const newCoupon: Coupon = {
         name: 'New Coupon',
         code: 'NEWCODE',
-        discountType: 'amount',
+        discountType: DiscountType.AMOUNT,
         discountValue: 5000,
       };
 
@@ -354,36 +354,36 @@ describe('basic > ', () => {
 
     describe('calculateItemTotal', () => {
       test('할인 없이 총액을 계산해야 합니다.', () => {
-        const item: CartItem = { product: testProduct, quantity: 1 };
+        const item: CartItemType = { product: testProduct, quantity: 1 };
         expect(cartUtils.calculateItemTotal(item).totalAfterDiscount).toBe(100);
       });
 
       test('수량에 따라 올바른 할인을 적용해야 합니다.', () => {
-        const item: CartItem = { product: testProduct, quantity: 5 };
+        const item: CartItemType = { product: testProduct, quantity: 5 };
         expect(cartUtils.calculateItemTotal(item).totalAfterDiscount).toBe(400); // 500 * 0.8
       });
     });
 
     describe('getMaxApplicableDiscount', () => {
       test('할인이 적용되지 않으면 0을 반환해야 합니다.', () => {
-        const item: CartItem = { product: testProduct, quantity: 1 };
+        const item: CartItemType = { product: testProduct, quantity: 1 };
         expect(cartUtils.getMaxApplicableDiscount(item)).toBe(0);
       });
 
       test('적용 가능한 가장 높은 할인율을 반환해야 합니다.', () => {
-        const item: CartItem = { product: testProduct, quantity: 5 };
+        const item: CartItemType = { product: testProduct, quantity: 5 };
         expect(cartUtils.getMaxApplicableDiscount(item)).toBe(0.2);
       });
     });
 
     describe('calculateCartTotal', () => {
-      const cart: CartItem[] = [
+      const cart: CartItemType[] = [
         { product: testProduct, quantity: 2 },
         { product: { ...testProduct, id: '2', price: 200 }, quantity: 1 },
       ];
 
       test('쿠폰 없이 총액을 올바르게 계산해야 합니다.', () => {
-        const result = cartUtils.calculateCartTotal(cart, null);
+        const result = cartUtils.calculateCartDiscount(cart, null);
         expect(result.totalBeforeDiscount).toBe(400);
         expect(result.totalAfterDiscount).toBe(380);
         expect(result.totalDiscount).toBe(20);
@@ -393,10 +393,10 @@ describe('basic > ', () => {
         const coupon: Coupon = {
           name: 'Test Coupon',
           code: 'TEST',
-          discountType: 'amount',
+          discountType: DiscountType.AMOUNT,
           discountValue: 50,
         };
-        const result = cartUtils.calculateCartTotal(cart, coupon);
+        const result = cartUtils.calculateCartDiscount(cart, coupon);
         expect(result.totalAfterDiscount).toBe(330);
         expect(result.totalDiscount).toBe(70);
       });
@@ -405,17 +405,17 @@ describe('basic > ', () => {
         const coupon: Coupon = {
           name: 'Test Coupon',
           code: 'TEST',
-          discountType: 'percentage',
+          discountType: DiscountType.PERCENTAGE,
           discountValue: 10,
         };
-        const result = cartUtils.calculateCartTotal(cart, coupon);
+        const result = cartUtils.calculateCartDiscount(cart, coupon);
         expect(result.totalAfterDiscount).toBe(342);
         expect(result.totalDiscount).toBe(58);
       });
     });
 
     describe('updateCartItemQuantity', () => {
-      const cart: CartItem[] = [
+      const cart: CartItemType[] = [
         { product: testProduct, quantity: 2 },
         { product: { ...testProduct, id: '2' }, quantity: 1 },
       ];
@@ -450,7 +450,7 @@ describe('basic > ', () => {
     const testCoupon: Coupon = {
       name: 'Test Coupon',
       code: 'TEST',
-      discountType: 'percentage',
+      discountType: DiscountType.PERCENTAGE,
       discountValue: 10,
     };
 
