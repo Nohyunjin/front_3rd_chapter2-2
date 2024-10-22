@@ -2,6 +2,11 @@ import { useEffect, useState } from 'react';
 import { Coupon, Discount, Product } from '../../types.ts';
 import { Button } from '../components/common/Button.tsx';
 import { TextInput } from '../components/common/TextInput.tsx';
+import {
+  displayCoupons,
+  displayProductStatus,
+  displayQuantityDiscount,
+} from '../utils/textFormat.ts';
 
 interface Props {
   products: Product[];
@@ -240,7 +245,7 @@ export const AdminPage = ({
               >
                 <Button
                   dataTestid='toggle-button'
-                  text={`${product.name} - ${product.price}원 (재고: ${product.stock})`}
+                  text={displayProductStatus(product)}
                   className='w-full text-left font-semibold'
                   onClick={() => toggleProductAccordion(product.id)}
                 />
@@ -318,10 +323,7 @@ export const AdminPage = ({
                               key={index}
                               className='flex justify-between items-center mb-2'
                             >
-                              <span>
-                                {discount.quantity}개 이상 구매 시{' '}
-                                {discount.rate * 100}% 할인
-                              </span>
+                              <span>{displayQuantityDiscount(discount)}</span>
                               <Button
                                 text='삭제'
                                 className='bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600'
@@ -375,8 +377,7 @@ export const AdminPage = ({
                         {product.discounts.map((discount, index) => (
                           <div key={index} className='mb-2'>
                             <span>
-                              {discount.quantity}개 이상 구매 시{' '}
-                              {discount.rate * 100}% 할인
+                              {displayQuantityDiscount(discount)}
                             </span>
                           </div>
                         ))}
@@ -462,11 +463,7 @@ export const AdminPage = ({
                     data-testid={`coupon-${index + 1}`}
                     className='bg-gray-100 p-2 rounded'
                   >
-                    {coupon.name} ({coupon.code}):
-                    {coupon.discountType === 'amount'
-                      ? `${coupon.discountValue}원`
-                      : `${coupon.discountValue}%`}{' '}
-                    할인
+                    {displayCoupons(coupon)}
                   </div>
                 ))}
               </div>
