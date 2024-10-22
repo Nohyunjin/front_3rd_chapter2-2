@@ -1,5 +1,5 @@
 import {
-  CartItem,
+  CartItemType,
   Coupon,
   DiscountType,
   PageType,
@@ -37,11 +37,11 @@ export const CartPage = ({ products, coupons }: Props) => {
     addToCart(product);
   };
 
-  const handleUpdateQuantity = (cartItem: CartItem, quantity: number) => {
+  const handleUpdateQuantity = (cartItem: CartItemType, quantity: number) => {
     updateQuantity(cartItem.product.id, quantity);
   };
 
-  const handleRemoveFromCart = (cartItem: CartItem) => {
+  const handleRemoveFromCart = (cartItem: CartItemType) => {
     removeFromCart(cartItem.product.id);
   };
 
