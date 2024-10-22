@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Coupon, Product } from '../types.ts';
+import { Coupon, DiscountType, Product } from '../types.ts';
 import { useCoupons, useProducts } from './hooks';
 import { AdminPage } from './views/AdminPage.tsx';
 import { CartPage } from './views/CartPage.tsx';
@@ -35,13 +35,13 @@ const initialCoupons: Coupon[] = [
   {
     name: '5000원 할인 쿠폰',
     code: 'AMOUNT5000',
-    discountType: 'amount',
+    discountType: DiscountType.AMOUNT,
     discountValue: 5000,
   },
   {
     name: '10% 할인 쿠폰',
     code: 'PERCENT10',
-    discountType: 'percentage',
+    discountType: DiscountType.PERCENTAGE,
     discountValue: 10,
   },
 ];
