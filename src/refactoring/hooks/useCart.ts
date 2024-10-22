@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { CartItemType, Coupon, Product } from '../../types';
 import {
-  calculateCartTotal,
+  calculateCartDiscount,
   updateCartItemQuantity,
 } from '../utils/cart/cartUtils';
 
@@ -51,7 +51,7 @@ export const useCart = () => {
     setSelectedCoupon(coupon);
   };
 
-  const calculateTotal = () => calculateCartTotal(cart, selectedCoupon);
+  const calculateTotal = () => calculateCartDiscount(cart, selectedCoupon);
 
   return {
     cart,
